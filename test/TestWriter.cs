@@ -1,13 +1,13 @@
 ﻿using System.Collections.Generic;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using TinyJson;
 
 namespace TinyJson.Test
 {
-    [TestClass]
+    [TestFixture]
     public class TestWriter
     {
-        [TestMethod]
+        [Test]
         public void TestValues()
         {
             Assert.AreEqual("123", 123.ToJson());
@@ -17,7 +17,7 @@ namespace TinyJson.Test
             Assert.AreEqual("[1,2,3]", new List<int> { 1, 2, 3 }.ToJson());
         }
 
-        [TestMethod]
+        [Test]
         public void TestDicts()
         {
             Assert.AreEqual("{\"foo\":\"bar\"}", new Dictionary<string, string> { { "foo", "bar" } }.ToJson());
@@ -36,7 +36,7 @@ namespace TinyJson.Test
             public SimpleObject A;
         }
 
-        [TestMethod]
+        [Test]
         public void TestObjects()
         {
             Assert.AreEqual("{\"A\":{},\"B\":[1,2,3],\"C\":\"Test\"}", new SimpleObject { A = new SimpleObject(), B = new List<int> { 1, 2, 3 }, C = "Test" }.ToJson());
@@ -53,13 +53,13 @@ namespace TinyJson.Test
             public static NastyStruct Nasty = new NastyStruct(0, 0, 0);
         }
 
-        [TestMethod]
+        [Test]
         public void TestNastyStruct()
         {
             Assert.AreEqual("{\"R\":1,\"G\":2,\"B\":3}", new NastyStruct(1,2,3).ToJson());
         }
 
-        [TestMethod]
+        [Test]
         public void TestEscaping()
         {
             Assert.AreEqual("{\"hello\":\"world\\n \\\\ \\\" \\b \\r \\u0000\u263A\"}", new Dictionary<string,string>{

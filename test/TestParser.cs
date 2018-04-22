@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using TinyJson;
 
 namespace TinyJson.Test
 {
-    [TestClass]
+    [TestFixture]
     public class TestParser
     {
         static void Test<T>(T expected, string json)
@@ -15,7 +15,7 @@ namespace TinyJson.Test
             Assert.AreEqual(expected, value);
         }
 
-        [TestMethod]
+        [Test]
         public void TestValues()
         {
             Test(12345, "12345");
@@ -36,7 +36,7 @@ namespace TinyJson.Test
             CollectionAssert.AreEqual(expected, value);
         }
 
-        [TestMethod]
+        [Test]
         public void TestArrayOfValues()
         {
             ArrayTest(new string[] { "one", "two", "three" }, "[\"one\",\"two\",\"three\"]");
@@ -54,7 +54,7 @@ namespace TinyJson.Test
             CollectionAssert.AreEqual(expected, value);
         }
 
-        [TestMethod]
+        [Test]
         public void TestListOfValues()
         {
             ListTest(new List<string> { "one", "two", "three" }, "[\"one\",\"two\",\"three\"]");
@@ -66,7 +66,7 @@ namespace TinyJson.Test
             ListTest<object>(null, "[garbled");
         }
 
-        [TestMethod]
+        [Test]
         public void TestRecursiveLists()
         {
             var expected = new List<List<int>> { new List<int> { 1, 2 }, new List<int> { 3, 4 } };
@@ -76,7 +76,7 @@ namespace TinyJson.Test
                 CollectionAssert.AreEqual(expected[i], actual[i]);
         }
 
-        [TestMethod]
+        [Test]
         public void TestRecursiveArrays()
         {
             var expected = new int[][] { new int[] { 1, 2 }, new int[] { 3, 4 } };
@@ -97,7 +97,7 @@ namespace TinyJson.Test
             }
         }
 
-        [TestMethod]
+        [Test]
         public void TestDictionary()
         {
             DictTest(new Dictionary<string, int> { { "foo", 5 }, { "bar", 10 }, { "baz", 128 } }, "{\"foo\":5,\"bar\":10,\"baz\":128}");
@@ -107,7 +107,7 @@ namespace TinyJson.Test
             DictTest(new Dictionary<string, string> { { "foo", "\"" }, { "bar", "hello" }, { "baz", "," } }, "{\"foo\":\"\\\"\",\"bar\":\"hello\",\"baz\":\",\"}");
         }
 
-        [TestMethod]
+        [Test]
         public void TestRecursiveDictionary()
         {
             var result = "{\"foo\":{ \"bar\":\"\\\"{,,:[]}\" }}".FromJson<Dictionary<string, Dictionary<string, string>>>();
@@ -122,7 +122,7 @@ namespace TinyJson.Test
             public List<int> D { get; set; }
         }
 
-        [TestMethod]
+        [Test]
         public void TestSimpleObject()
         {
             SimpleObject value = "{\"A\":123,\"B\":456,\"C\":\"789\",\"D\":[10,11,12]}".FromJson<SimpleObject>();
@@ -141,7 +141,7 @@ namespace TinyJson.Test
             public SimpleObject Obj;
         }
 
-        [TestMethod]
+        [Test]
         public void TestSimpleStruct()
         {
             SimpleStruct value = "{\"Obj\":{\"A\":12345}}".FromJson<SimpleStruct>();
@@ -154,7 +154,7 @@ namespace TinyJson.Test
             public int Value;
         }
 
-        [TestMethod]
+        [Test]
         public void TestListOfStructs()
         {
             var values = "[{\"Value\":1},{\"Value\":2},{\"Value\":3}]".FromJson<List<TinyStruct>>();
@@ -169,7 +169,7 @@ namespace TinyJson.Test
             public SimpleStruct C;
         }
 
-        [TestMethod]
+        [Test]
         public void TestDeepObject()
         {
             var value = "{\"A\":{\"A\":{\"A\":{}}}}".FromJson<TestObject2>();
@@ -197,7 +197,7 @@ namespace TinyJson.Test
             public TestObject3 Z { get; set; }
         }
 
-        [TestMethod]
+        [Test]
         public void PerformanceTest()
         {
             StringBuilder builder = new StringBuilder();
@@ -217,7 +217,7 @@ namespace TinyJson.Test
                 Assert.AreEqual(10, result[i].Z.F);
         }
 
-        [TestMethod]
+        [Test]
         public void CorruptionTest()
         {
             "{{{{{{[[[]]][[,,,,]],],],]]][[nulldsfoijsfd[[]]]]]]]]]}}}}}{{{{{{{{{D{FD{FD{F{{{{{}}}XXJJJI%&:,,,,,".FromJson<object>();
@@ -225,7 +225,7 @@ namespace TinyJson.Test
             "{::,[][][],::::,}".FromJson<Dictionary<string, object>>();
         }
 
-        [TestMethod]
+        [Test]
         public void DynamicParserTest()
         {
             List<object> list = (List<object>)("[0,1,2,3]".FromJson<object>());
@@ -247,7 +247,7 @@ namespace TinyJson.Test
             public static NastyStruct Nasty = new NastyStruct(0, 0, 0);
         }
 
-        [TestMethod]
+        [Test]
         public void TestNastyStruct()
         {
             NastyStruct s = "{\"R\":234,\"G\":123,\"B\":11}".FromJson<NastyStruct>();
@@ -256,7 +256,7 @@ namespace TinyJson.Test
             Assert.AreEqual(11, s.B);
         }
 
-        [TestMethod]
+        [Test]
         public void TestEscaping()
         {
             var orig = new Dictionary<string,string>{{"hello", "world\n \" \\ \b \r \\0\u263A" } };
