@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using NUnit.Framework;
+using System.Threading;
 using TinyJson;
 
 namespace TinyJson.Test
@@ -263,5 +264,32 @@ namespace TinyJson.Test
             var parsed = "{\"hello\":\"world\\n \\\" \\\\ \\b \\r \\0\\u263a\"}".FromJson<Dictionary<string,string>>();
             Assert.AreEqual(orig["hello"], parsed["hello"]);
         }
+
+		[Test]
+		public void TestMultithread() {
+			// Lots of threads
+			for (int i = 0; i < 100; i++) {
+				new Thread(() => {
+					// Each threads has enough work to potentially hit a race condition
+					for (int j = 0; j < 10000; j++) {
+						TestValues();
+						TestArrayOfValues();
+						TestListOfValues();
+						TestRecursiveLists();
+						TestRecursiveArrays();
+						TestDictionary();
+						TestRecursiveDictionary();
+						TestSimpleObject();
+						TestSimpleStruct();
+						TestListOfStructs();
+						TestDeepObject();
+						CorruptionTest();
+						DynamicParserTest();
+						TestNastyStruct();
+						TestEscaping();
+					}
+				}).Start();
+			}
+		}
     }
 }
